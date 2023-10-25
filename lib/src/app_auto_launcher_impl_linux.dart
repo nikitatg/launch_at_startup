@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:launch_at_startup/src/app_auto_launcher.dart';
+import 'package:path/path.dart' as p;
 
 class AppAutoLauncherImplLinux extends AppAutoLauncher {
   AppAutoLauncherImplLinux({
@@ -9,8 +10,13 @@ class AppAutoLauncherImplLinux extends AppAutoLauncher {
     List<String> args = const [],
   }) : super(appName: appName, appPath: appPath, args: args);
 
-  File get _desktopFile => File(
-      '${Platform.environment['HOME']}/.config/autostart/$appName.desktop');
+  File get _desktopFile => File(p.join(
+        Platform.environment['HOME']!,
+        '..',
+        '..',
+        '..',
+        '.config/autostart/$appName.desktop',
+      ));
 
   @override
   Future<bool> isEnabled() async {
