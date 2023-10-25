@@ -37,7 +37,7 @@ StartupNotify=false
 Terminal=false
 ''';
     if (!_desktopFile.existsSync()) {
-      _desktopFile.parent.createSync(recursive: true);
+      _desktopFile.createSync(recursive: true);
     }
     _desktopFile.writeAsStringSync(contents);
     return true;
