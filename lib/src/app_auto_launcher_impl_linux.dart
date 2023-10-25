@@ -10,12 +10,14 @@ class AppAutoLauncherImplLinux extends AppAutoLauncher {
     List<String> args = const [],
   }) : super(appName: appName, appPath: appPath, args: args);
 
-  File get _desktopFile => File(p.join(
-        Platform.environment['HOME']!,
-        '..',
-        '..',
-        '..',
-        '.config/autostart/$appName.desktop',
+  File get _desktopFile => File(p.normalize(
+        p.join(
+          Platform.environment['HOME']!,
+          '..',
+          '..',
+          '..',
+          '.config/autostart/$appName.desktop',
+        ),
       ));
 
   @override
