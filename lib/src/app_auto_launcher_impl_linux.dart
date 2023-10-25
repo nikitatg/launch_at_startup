@@ -36,7 +36,7 @@ Exec=${args.isEmpty ? appPath : '$appPath ${args.join(' ')}'}
 StartupNotify=false
 Terminal=false
 ''';
-    if (!_desktopFile.parent.existsSync()) {
+    if (!_desktopFile.existsSync()) {
       _desktopFile.parent.createSync(recursive: true);
     }
     _desktopFile.writeAsStringSync(contents);
