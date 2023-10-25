@@ -10,7 +10,7 @@ class AppAutoLauncherImplLinux extends AppAutoLauncher {
     List<String> args = const [],
   }) : super(appName: appName, appPath: appPath, args: args);
 
-  File get _desktopFile => File(p.normalize(
+  String get _desktopFileName => p.normalize(
         p.join(
           Platform.environment['HOME']!,
           '..',
@@ -18,11 +18,14 @@ class AppAutoLauncherImplLinux extends AppAutoLauncher {
           '..',
           '.config/autostart/$appName.desktop',
         ),
-      ));
+      );
+
+  String get _tempFileName =>
+      p.join(Platform.environment['HOME']!, '$appName.desktop');
 
   @override
   Future<bool> isEnabled() async {
-    return _desktopFile.existsSync();
+    return File(_desktopFileName).existsSync();
   }
 
   @override
@@ -36,17 +39,20 @@ Exec=${args.isEmpty ? appPath : '$appPath ${args.join(' ')}'}
 StartupNotify=false
 Terminal=false
 ''';
-    if (!_desktopFile.existsSync()) {
-      _desktopFile.createSync(recursive: true);
+    File tempFile = File(_tempFileName);
+    if (!tempFile.existsSync()) {
+      tempFile.createSync(recursive: true);
     }
-    _desktopFile.writeAsStringSync(contents);
+    tempFile.writeAsStringSync(contents);
+    tempFile.renameSync(_desktopFileName);
     return true;
   }
 
   @override
   Future<bool> disable() async {
-    if (_desktopFile.existsSync()) {
-      _desktopFile.deleteSync();
+    File desktopFile = File(_desktopFileName);
+    if (desktopFile.existsSync()) {
+      desktopFile.deleteSync();
     }
     return true;
   }
